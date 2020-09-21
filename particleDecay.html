@@ -1,0 +1,782 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="shortcut icon" href="http://www1.umn.edu/twincities/favicon.ico" type="image/x-icon" />
+<link rel="stylesheet" type="text/css" href="../../static/personal/styles/template.css" />
+<link rel="stylesheet" type="text/css" href="../../static/personal/styles/reset.css" />
+<link rel="stylesheet" type="text/css" href="../../static/personal/styles/text.css" />
+<link rel="stylesheet" type="text/css" href="../../static/personal/styles/optional.css" />
+<link rel="stylesheet" type="text/css" href="../../static/personal/styles/ui.css" />
+<link rel="stylesheet" type="text/css" href="../../static/personal/styles/layoutComponents.css" />
+<link rel="stylesheet" type="text/css" href="../../static/personal/styles/umntemplate.css" />
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+<title>Particle Decay Modeling</title>
+<meta name="Keywords" content="flitration, characterization, nanoparticle, health, environment, PM2.5, respirator, aerosol, airborne, science, design, agglomerate, filter, nanotechnology, particulate, nanoparticle" />
+</head>
+
+
+    
+</div>
+
+
+<style type="text/css">	
+	
+body {padding: 0; margin: 0;}
+
+
+
+#wrap	{
+    width: 100%;
+    height: 65px; 
+    margin: 0; 
+    z-index: 99;
+    position: relative;
+    background-color: #435a26;
+}
+	
+.navbar		{
+    height: 65px;
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    border-right: 1px solid #435a26;
+}
+			
+.navbar li 	{
+    height: auto;
+    width: 130px; 
+    float: left; 
+    text-align: center; 
+    list-style: none; 
+    font: normal bold 12px/1.2em Arial, Verdana, Helvetica;  
+    padding: 0;
+    margin: 0;
+    background-color: #435a26;					
+}
+
+.navbar a	{							
+    padding: 18px 0; 
+    border-left: 1px solid #bada8b;
+    border-right: 1px solid #1f5065;
+    text-decoration: none;
+    color: white;
+    display: block;
+}
+
+								
+.navbar li ul 	{
+    display: none;
+    height: auto;									
+    margin: 0;
+    padding: 0;								
+}
+				
+.navbar li:hover ul {
+    display: block;									
+}
+
+.navbar li ul li	{background-color: #54879d;}
+				
+.navbar li ul li a 	{
+    border-left: 1px solid #1f5065; 
+    border-right: 1px solid #1f5065; 
+    border-top: 1px solid #74a3b7; 
+    border-bottom: 1px solid #1f5065; 
+}
+				
+.navbar li ul li a:hover	{background-color: #FFFFFF;}
+
+#box {
+    border: 1px solid black;
+    height: 60px;
+    width:280px;
+    float:left;
+}				
+
+.tab-pane {
+	      background: lightgray;
+	      box-shadow: 0 0 4px rgba(0,0,0,.4);
+	      border-radius: 0;
+	      padding: 10px;
+		  border: 1px solid black;
+
+	  }
+
+</style>								
+	
+			
+	
+	
+<body>
+
+
+<!-- BEGIN CENTER COLUMN -->
+<br>
+<div style="width: 1000px; margin: auto;">
+<img style="width: 1000px;" src="umn_logo.png" alt="">
+<div style="background-color: #ccc;">
+  <br>
+  <div id="decay_container" style="margin-left: 10px; margin-right: 10px;">
+    <div style="font-size: 25px;">Calculation of the particle number concentration in a classroom</div>
+     <br/>
+    <div id="decay form">
+      <div style="font-size: 20px;">Input parameters</div>
+      <div style="margin-top: 10px;">
+        <table>
+            <tr>
+                <td style="width: 200px;">
+                    <label for="box1">Case 1</label>
+                    <input type="checkbox" id="box1" name = "box1" checked>
+                    <label for="box2">Case 2</label>
+                    <input type="checkbox" id="box2" name="box2">
+                    <label for="box3">Case 3</label>
+                    <input type="checkbox" id="box3" name="box3">
+                </td>
+                <td>
+                    <span style="color:darkred;">
+                        To compare different cases, check Case 1, 2, 3 boxes first and enter the conditions of Case 1, Case 2 and Case 3 seperately. When finished, push Calculate to get the comparison curves. For comparison of 2 cases, check only Case 1, 2 boxes.    
+                    </span>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <ul class="nav nav-tabs" >
+        <li id = "list1" class="active"><a data-toggle="tab" href="#case1"><span id = "span1">Case1</span></a></li>
+        <li id = "list2" class =""><a data-toggle="tab" href="#case2"><span id = "span2">Case2</span></a></li>
+        <li id = "list3" class =""><a data-toggle="tab" href="#case3"><span id = "span3">Case3</span></a></li>
+    </ul>
+    
+    <div id="container" style="width:100%; height: 300px; border:none">
+        <div class="tab-content" width="80%">
+            <div class="tab-pane active" id="case1" style = "height:300px; background-color: #ccc;">
+                <br>
+                <div>
+                    <i>(If you don't have any of these units, just type in "0" for flow rate)</i>
+                  </div>
+                  <div style="margin-top: 5px; margin-left: 20px;">
+                    <table style="width:900px">
+                        <tr>
+                            <td style="text-align: center;"><strong>AHU (Air Handling Unit)</strong></td>
+                            <td style="text-align: center;"><strong>FCU (Fan Coil Unit)</strong> </td>
+                            <td style="text-align: center;"><strong>IAC (Indoor Air Cleaner)</strong> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div id="box">
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="AHU1" >AHU Flow Rate: </label>
+                                        <input id="AHUBox1" name="AHU1" onkeyup="change('AHUBox')" type="text" size="15"> CFM
+                                    </div>
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="filterAHU1">AHU Filter: </label>
+                                        <select id="filterAHUBox1" name="filterAHU1" onChange="change('filterAHUBox')">
+                                            <option value="0.2">MERV 8</option>
+                                            <option value="0.7">MERV 13</option>
+                                            <option value="0.92">MERV 15</option>
+                                            <option value="0.96">HEPA</option>
+                                        </select>
+                                    </div>
+                                    
+                                </div>
+                            </td>
+                            <td>
+                                <div id="box">
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="FCU1">FCU Flow Rate: </label> 
+                                        <input id="FCUBox1" name="FCU1" onkeyup="change('FCUBox')" type="text" size="15"> CFM
+                                    </div>
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="filterFCU1">FCU Filter: </label>
+                                        <select id="filterFCUBox1" name="filterFCU1" onChange="change('filterFCUBox')">
+                                            <option value="0.2">MERV 8</option>
+                                            <option value="0.7">MERV 13</option>
+                                            <option value="0.92">MERV 15</option>
+                                            <option value="0.96">HEPA</option>
+                                        </select>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </td>
+                            <td>
+                                <div id="box">
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="IAC1">IAC Flow Rate: </label>
+                                        <input id="IACBox1" name="IAC1" onkeyup="change('IACBox')" type="text" size="15"> CFM
+                                    </div>
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="filterIAC1">IAC Filter: </label>
+                                        <select id="filterIACBox1" name="filterIAC1" onChange="change('filterIACBox')">
+                                            <option value="0.2">MERV 8</option>
+                                            <option value="0.7">MERV 13</option>
+                                            <option value="0.92">MERV 15</option>
+                                            <option value="0.96">HEPA</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                    
+                  </div>
+                  <div style="margin-top: 10px; margin-left: 20px;">
+                    <label><strong>Room Dimensions :</strong></label>
+                    <label for="width1"><strong>Width: </strong></label>
+                    <input id="widthBox1" name="width1" type="text" onkeyup="change('widthBox')"> FT * 
+                    <label for="length1"><strong>Length: </strong></label>
+                    <input id="lengthBox1" name="length1" type="text" onkeyup="change('lengthBox')"> FT *
+                    <label for="height1"><strong>Height: </strong></label>
+                    <input id="heightBox1" name="height1" type="text" onkeyup="change('heightBox')"> FT 
+                </div>
+                <div style="margin-top: 10px; margin-left: 20px;">
+                  <label for="outdoorConcentration1" ><strong>Outdoor particle number concentration: </strong></label>
+                  <input id="outdoorConcentrationBox1" name="outdoorConcentration1" type="text" onkeyup="change('outdoorConcentrationBox')"> #/cc
+                  <button onclick="defaultValue('outdoorConcentrationBox1');change('outdoorConcentrationBox');">Default</button>
+              </div>
+              <div style="margin-top: 10px; margin-left: 20px;">
+                  <label for="concentration1" ><strong>Initial particle number concentration in the classroom: </strong></label>
+                  <input id="concentrationBox1" name="concentration1" type="text" onkeyup="change('concentrationBox')"> #/cc
+                  <button onclick="defaultValue('concentrationBox1');change('concentrationBox');">Default</button>
+              </div>
+                <div style="margin-top: 10px; margin-left: 20px;">
+                  <label for="occupants1" ><strong>Number of occupants in the room: </strong></label>
+                  <input id="occupantsBox1" name="occupants1" type="text" onkeyup="change('occupantsBox')"> Person(s)
+              </div>
+                
+            </div>
+
+            <div class="tab-pane" id="case2" style = "height:300px; background-color: #ccc;">
+                <br>
+                <div>
+                    <i>(If you don't have any of these units, just type in "0" for flow rate)</i>
+                  </div>
+                  <div style="margin-top: 5px; margin-left: 20px;">
+                    <table style="width:900px">
+                        <tr>
+                            <td style="text-align: center;"><strong>AHU (Air Handling Unit)</strong></td>
+                            <td style="text-align: center;"><strong>FCU (Fan Coil Unit)</strong> </td>
+                            <td style="text-align: center;"><strong>IAC (Indoor Air Cleaner)</strong> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div id="box">
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="AHU2" >AHU Flow Rate: </label>
+                                        <input id="AHUBox2" name="AHU2" type="text" size="15"> CFM
+                                    </div>
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="filterAHU2">AHU Filter: </label>
+                                        <select id="filterAHUBox2" name="filterAHU2">
+                                            <option value="0.2">MERV 8</option>
+                                            <option value="0.7">MERV 13</option>
+                                            <option value="0.92">MERV 15</option>
+                                            <option value="0.96">HEPA</option>
+                                        </select>
+                                    </div>
+                                    
+                                </div>
+                            </td>
+                            <td>
+                                <div id="box">
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="FCU2">FCU Flow Rate: </label> 
+                                        <input id="FCUBox2" name="FCU2" type="text" size="15"> CFM
+                                    </div>
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="filterFCU2">FCU Filter: </label>
+                                        <select id="filterFCUBox2" name="filterFCU2">
+                                            <option value="0.2">MERV 8</option>
+                                            <option value="0.7">MERV 13</option>
+                                            <option value="0.92">MERV 15</option>
+                                            <option value="0.96">HEPA</option>
+                                        </select>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </td>
+                            <td>
+                                <div id="box">
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="IAC2">IAC Flow Rate: </label>
+                                        <input id="IACBox2" name="IAC2" type="text" size="15"> CFM
+                                    </div>
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="filterIAC2">IAC Filter: </label>
+                                        <select id="filterIACBox2" name="filterIAC2">
+                                            <option value="0.2">MERV 8</option>
+                                            <option value="0.7">MERV 13</option>
+                                            <option value="0.92">MERV 15</option>
+                                            <option value="0.96">HEPA</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                    
+                  </div>
+                  <div style="margin-top: 10px; margin-left: 20px;">
+                    <label><strong>Room Dimensions :</strong></label>
+                    <label for="width2"><strong>Width: </strong></label>
+                    <input id="widthBox2" name="width2" type="text"> FT * 
+                    <label for="length2"><strong>Length: </strong></label>
+                    <input id="lengthBox2" name="length2" type="text"> FT *
+                    <label for="height2"><strong>Height: </strong></label>
+                    <input id="heightBox2" name="height2" type="text"> FT 
+                </div>
+                <div style="margin-top: 10px; margin-left: 20px;">
+                  <label for="outdoorConcentration2" ><strong>Outdoor particle number concentration: </strong></label>
+                  <input id="outdoorConcentrationBox2" name="outdoorConcentration2" type="text"> #/cc
+                  <button onclick="defaultValue('outdoorConcentrationBox2')">Default</button>
+              </div>
+              <div style="margin-top: 10px; margin-left: 20px;">
+                  <label for="concentration2" ><strong>Initial particle number concentration in the classroom: </strong></label>
+                  <input id="concentrationBox2" name="concentration2" type="text"> #/cc
+                  <button onclick="defaultValue('concentrationBox2')">Default</button>
+              </div>
+                <div style="margin-top: 10px; margin-left: 20px;">
+                  <label for="occupants2" ><strong>Number of occupants in the room: </strong></label>
+                  <input id="occupantsBox2" name="occupants2" type="text"> Person(s)
+              </div>
+            </div>
+
+            <div class="tab-pane" id="case3" style = "height:300px; background-color: #ccc;">
+                <br>
+                <div>
+                    <i>(If you don't have any of these units, just type in "0" for flow rate)</i>
+                  </div>
+                  <div style="margin-top: 5px; margin-left: 20px;">
+                    <table style="width:900px">
+                        <tr>
+                            <td style="text-align: center;"><strong>AHU (Air Handling Unit)</strong></td>
+                            <td style="text-align: center;"><strong>FCU (Fan Coil Unit)</strong> </td>
+                            <td style="text-align: center;"><strong>IAC (Indoor Air Cleaner)</strong> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div id="box">
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="AHU3" >AHU Flow Rate: </label>
+                                        <input id="AHUBox3" name="AHU3" type="text" size="15"> CFM
+                                    </div>
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="filterAHU3">AHU Filter: </label>
+                                        <select id="filterAHUBox3" name="filterAHU3">
+                                            <option value="0.2">MERV 8</option>
+                                            <option value="0.7">MERV 13</option>
+                                            <option value="0.92">MERV 15</option>
+                                            <option value="0.96">HEPA</option>
+                                        </select>
+                                    </div>
+                                    
+                                </div>
+                            </td>
+                            <td>
+                                <div id="box">
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="FCU3">FCU Flow Rate: </label> 
+                                        <input id="FCUBox3" name="FCU3" type="text" size="15"> CFM
+                                    </div>
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="filterFCU3">FCU Filter: </label>
+                                        <select id="filterFCUBox3" name="filterFCU3">
+                                            <option value="0.2">MERV 8</option>
+                                            <option value="0.7">MERV 13</option>
+                                            <option value="0.92">MERV 15</option>
+                                            <option value="0.96">HEPA</option>
+                                        </select>
+                                    </div>
+                                    
+                                </div>
+                                
+                            </td>
+                            <td>
+                                <div id="box">
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="IAC3">IAC Flow Rate: </label>
+                                        <input id="IACBox3" name="IAC3" type="text" size="15"> CFM
+                                    </div>
+                                    <div style="margin-top: 5px;">
+                                        &emsp;<label for="filterIAC3">IAC Filter: </label>
+                                        <select id="filterIACBox3" name="filterIAC3">
+                                            <option value="0.2">MERV 8</option>
+                                            <option value="0.7">MERV 13</option>
+                                            <option value="0.92">MERV 15</option>
+                                            <option value="0.96">HEPA</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                            </td>
+                        </tr>
+                    </table>
+                    
+                  </div>
+                  <div style="margin-top: 10px; margin-left: 20px;">
+                    <label><strong>Room Dimensions :</strong></label>
+                    <label for="width3"><strong>Width: </strong></label>
+                    <input id="widthBox3" name="width3" type="text"> FT * 
+                    <label for="length3"><strong>Length: </strong></label>
+                    <input id="lengthBox3" name="length3" type="text"> FT *
+                    <label for="height3"><strong>Height: </strong></label>
+                    <input id="heightBox3" name="height3" type="text"> FT 
+                </div>
+                <div style="margin-top: 10px; margin-left: 20px;">
+                  <label for="outdoorConcentration3" ><strong>Outdoor particle number concentration: </strong></label>
+                  <input id="outdoorConcentrationBox3" name="outdoorConcentration3" type="text"> #/cc
+                  <button onclick="defaultValue('outdoorConcentrationBox3')">Default</button>
+              </div>
+              <div style="margin-top: 10px; margin-left: 20px;">
+                  <label for="concentration3" ><strong>Initial particle number concentration in the classroom: </strong></label>
+                  <input id="concentrationBox3" name="concentration3" type="text"> #/cc
+                  <button onclick="defaultValue('concentrationBox3')">Default</button>
+              </div>
+                <div style="margin-top: 10px; margin-left: 20px;">
+                  <label for="occupants3" ><strong>Number of occupants in the room: </strong></label>
+                  <input id="occupantsBox3" name="occupants3" type="text"> Person(s)
+              </div>
+            </div>
+        </div>
+    </div>
+      
+      
+      
+      <div style="margin-top: 10px; margin-left: 20px;">
+        <button onclick="calculate()">Calculate</button>
+      </div>
+      <br>
+      <figure class="highcharts-figure">
+        <div id="decay_graph"></div> 
+        <br>
+        <!-- <div id="cleanUp" style="visibility: hidden;"></div> -->
+            <table id="cleanUp" style="visibility: collapse;">
+                <tr>
+                    <td id="cleanUpTitle1" style="text-align: center;visibility: collapse;"><strong>Case 1</strong></td>
+                    <td id="cleanUpTitle2" style="text-align: center;visibility: collapse;"><strong>Case 2</strong></td>
+                    <td id="cleanUpTitle3" style="text-align: center;visibility: collapse;"><strong>Case 3</strong></td>
+                </tr>
+                <tr>
+                    <td id="cleanUp1" style="visibility: collapse;">
+                        <div style="height: 70px;width:280px;float:left;">
+                            <div id="50%1" style="margin-top:10px;">  
+                                &emsp;&emsp;&emsp;<label><strong>Time to 50% cleanup:&emsp;</strong></label><span>N/A</span>
+                            </div>  
+                            <div id="80%1">
+                                &emsp;&emsp;&emsp;<label><strong>Time to 80% cleanup:&emsp;</strong></label><span>N/A</span>
+                            </div>
+                            <div id="ACH1">
+                                &emsp;&emsp;&emsp;<label><strong>Air Change Per Hour (ACH):&emsp;</strong></label><span>N/A</span>              
+                            </div>    
+                        </div>
+                        
+                    </td>
+                    <td id="cleanUp2" style="visibility: collapse;"> 
+                        <div style="height: 70px;width:280px;float:left;">
+                            <div id="50%2" style="margin-top:10px;">  
+                                &emsp;&emsp;&emsp;<label><strong>Time to 50% cleanup:&emsp;</strong></label><span>N/A</span>
+                            </div>  
+                            <div id="80%2">
+                                &emsp;&emsp;&emsp;<label><strong>Time to 80% cleanup:&emsp; </strong></label><span>N/A</span>
+                            </div>
+                            <div id="ACH2">
+                                &emsp;&emsp;&emsp;<label><strong>Air Change Per Hour (ACH):&emsp; </strong></label><span>N/A</span>              
+                            </div>    
+                        </div>
+                    </td>
+                    <td id="cleanUp3" style="visibility: collapse;">
+                        <div style="height: 70px;width:280px;float:left;">
+                            <div id="50%3" style="margin-top:10px;">  
+                                &emsp;&emsp;&emsp;<label><strong>Time to 50% cleanup:&emsp; </strong></label><span>N/A</span>
+                            </div>  
+                            <div id="80%3">
+                                &emsp;&emsp;&emsp;<label><strong>Time to 80% cleanup:&emsp;</strong></label><span>N/A</span>
+                            </div>
+                            <div id="ACH3">
+                                &emsp;&emsp;&emsp;<label><strong>Air Change Per Hour (ACH):&emsp;</strong></label><span>N/A</span>              
+                            </div>    
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            
+        </div>
+      </figure>
+      <br>
+    </div>
+  </div>
+</div>
+</div>
+
+
+</body>
+<script>
+    function defaultValue(box) {
+        document.getElementById(box).value = "6800"
+    }
+
+    function chooseCase() {
+		var i;
+		for (i = 1; i < 6; i++) {
+			box = document.getElementById('box' + i);
+			if (box.checked) {
+				document.getElementById('list' + i).style.display='initial';
+			}
+			else {
+				document.getElementById('list' + i).style.display='none';
+			}
+		}
+	}
+
+    function change(box) {
+        var first = box + "1";
+        var second = box + "2";
+        var third = box + "3";
+        document.getElementById(second).value = document.getElementById(first).value;
+        document.getElementById(third).value = document.getElementById(first).value;
+    }
+
+  function calculate() {
+
+    var data = {}
+    data[1] = {}
+    data[2] = {}
+    data[3] = {}
+    data[1]["output"] = []
+    data[1]["ratio"] = []
+    data[2]["output"] = []
+    data[2]["ratio"] = []
+    data[3]["output"] = []
+    data[3]["ratio"] = []
+    var conversion = 2118.8799727597;
+
+    // loop through all the checked boxes to get the values for different cases and compute the values into output and ratio
+    for (var i = 1; i < 4; i++) {
+        box = document.getElementById('box' + i);
+        if (box.checked) {
+            var AHU = document.getElementById("AHUBox" + i).value;
+            var FCU = document.getElementById("FCUBox" + i).value;
+            var IAC = document.getElementById("IACBox" + i).value;
+            var AHUFilter = document.getElementById("filterAHUBox" + i).value;
+            var FCUFilter = document.getElementById("filterFCUBox" + i).value;
+            var IACFilter = document.getElementById("filterIACBox" + i).value;
+            var width = document.getElementById("widthBox" + i).value;
+            var length = document.getElementById("lengthBox" + i).value;
+            var height = document.getElementById("heightBox" + i).value;
+            var concentration = document.getElementById("concentrationBox" + i).value;
+            var outdoorConcentration = document.getElementById("outdoorConcentrationBox" + i).value;
+            var occupants = document.getElementById("occupantsBox" + i).value;
+            if (AHU === "" || isNaN(AHU)) {
+                alert("Please fill in AHU with number in case "  + i)
+                return;
+            }
+            else if (FCU === "" || isNaN(FCU)) {
+                alert("Please fill in FCU with number" + i)
+                return;
+            }
+            else if (IAC === "" || isNaN(IAC)) {
+                alert("Please fill in IAC with number" + i)
+                return;
+            }
+            else if (width === "" || isNaN(width)) {
+                alert("Please fill in width with number" + i)
+                return;
+            }
+            else if (length === "" || isNaN(length)) {
+                alert("Please fill in length with number" + i)
+                return;
+            }
+            else if (height === "" || isNaN(height)) {
+                alert("Please fill in height with number" + i)
+                return;
+            }
+            else if (concentration === "" || isNaN(concentration)) {
+                alert("Please fill in concentration with number" + i)
+                return;
+            }
+            else if (occupants === "" || isNaN(occupants)) {
+                alert("Please fill in occupants with number" + i)
+                return;
+            }
+            else if (outdoorConcentration === "" || isNaN(outdoorConcentration)) {
+                alert("Please fill in outdoor concentration with number" + i)
+                return;
+            }
+            
+            
+            AHU = parseFloat(AHU) / conversion;
+            FCU = parseFloat(FCU) / conversion;
+            IAC = parseFloat(IAC) / conversion;
+            var ftvolume = parseFloat(width) * parseFloat(length) * parseFloat(height)
+            var ftarea = 2 * (parseFloat(width)*parseFloat(length) + parseFloat(length)*parseFloat(height) + parseFloat(width)*parseFloat(height))
+            var volume = ftvolume / 35.3147;
+            var area = ftarea / 10.764;
+            var source = parseFloat(occupants) * 10;
+            var wall_loss = 1.71 * Math.pow(10,-4);
+            
+            var a = parseFloat(concentration) - ((source + parseFloat(AHU) * parseFloat(outdoorConcentration) * (1 - parseFloat(AHUFilter))) / (parseFloat(AHU) + parseFloat(FCU)*parseFloat(FCUFilter) + parseFloat(IAC)*parseFloat(IACFilter) + area*wall_loss))
+            var b = (parseFloat(AHU) + parseFloat(FCU)*parseFloat(FCUFilter) + parseFloat(IAC)*parseFloat(IACFilter) + area*wall_loss) / volume * -1;
+            var c = (source + parseFloat(AHU) * parseFloat(outdoorConcentration) * (1 - parseFloat(AHUFilter))) / (parseFloat(AHU) + parseFloat(FCU)*parseFloat(FCUFilter) + parseFloat(IAC)*parseFloat(IACFilter) + area*wall_loss)
+
+            for (var j = 0; j <= 60; j++) {
+                var ans = a * Math.exp(b * j * 60) + c
+                data[i]["output"].push(ans)
+                data[i]["ratio"].push(ans/parseFloat(concentration));
+            }
+
+            var percent50 = concentration * 0.5;
+            var percent80 = concentration * 0.2;
+
+            var calculation50 = Math.log((percent50 - c) / a);
+            calculation50 = calculation50 / b / 60;
+
+            var calculation80 = Math.log((percent80 - c) / a);
+            calculation80 = calculation80 /b / 60;
+
+            var ACH = 3600 * (parseFloat(AHU) + parseFloat(FCU) + parseFloat(IAC)) / volume;
+
+            document.getElementById("ACH" + i).innerHTML = "&emsp;&emsp;&emsp;<label><strong>Air Change Per Hour (ACH):&emsp;</strong></label><span>" + ACH.toFixed(2) + "</span>"
+            if (calculation50 < 0 || isNaN(calculation50)) {
+                document.getElementById("50%" + i).innerHTML = "&emsp;&emsp;&emsp;<label><strong>Time to 50% cleanup:&emsp;</strong></label><span>N/A</span>"
+            }
+            else {
+                document.getElementById("50%" + i).innerHTML = "&emsp;&emsp;&emsp;<label><strong>Time to 50% cleanup:&emsp;</strong></label><span>" + calculation50.toFixed(2) + " mins</span>"
+            }
+
+            if (calculation80 < 0 || isNaN(calculation80)) {
+                document.getElementById("80%" + i).innerHTML = "&emsp;&emsp;&emsp;<label><strong>Time to 80% cleanup:&emsp;</strong></label><span>N/A</span>"        
+            }
+            else {
+                document.getElementById("80%" + i).innerHTML = "&emsp;&emsp;&emsp;<label><strong>Time to 80% cleanup:&emsp;</strong></label><span>" + calculation80.toFixed(2) + " mins</span>"        
+            }
+            document.getElementById("cleanUpTitle" + i).style.visibility = "visible"
+            document.getElementById("cleanUp" + i).style.visibility = "visible"
+        }
+    }
+    
+
+    Highcharts.chart('decay_graph', {
+        chart: {
+            type: 'spline'
+        },
+        title: {
+            text: 'Particle Number Concentration Decay'
+        },
+        xAxis: {
+            title: {
+                text: 'Time(min)'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value;
+                }
+            }
+        },
+        yAxis: [{
+            title: {
+                text: 'Particle number concentration (#/cc)'
+            },
+            labels: {
+                formatter: function () {
+                    return this.value;
+                }
+            }},
+            {
+            title: {
+                text: 'Particle number concentration ratio'
+            },
+            opposite: true,
+            max: 1,
+            min:0,
+            visible: false,
+            labels: {
+                formatter: function () {
+                    return this.value;
+                }
+            }   
+        }],
+        tooltip: {
+            crosshairs: true,
+            shared: true,
+            formatter: function() {
+                return this.points.reduce(function (s, point) {
+                    if (point.series.name == "Particle Concentration (#/cc)") {
+                        return s + '<br/>' + point.series.name + ': ' +
+                            parseInt(point.y);
+                    }
+                    else {
+                        return s + '<br/>' + point.series.name + ': ' +
+                            (point.y).toFixed(2);
+                    }
+                    
+                }, '<b>Time(min): ' + this.x + '</b>');
+            }
+        },
+        plotOptions: {
+            spline: {
+                marker: {
+                    radius: 1,
+                    lineColor: '#666666',
+                    lineWidth: 1
+                }
+            },
+
+        },
+        series: [{
+            name: 'Particle Concentration 1(#/cc)',
+            data: data[1]["output"],
+            color: '#FF0000',
+        },
+        {
+            name: 'Particle Concentration 2(#/cc)',
+            data: data[2]["output"],
+            color: 'green',
+            showInLegend: data[2]["output"].length > 0 ? true : false
+        },
+        {
+            name: 'Particle Concentration 3(#/cc)',
+            data: data[3]["output"],
+            color: 'blue',
+            showInLegend: data[3]["output"].length > 0 ? true : false
+        },
+        {
+            name: 'Ratio 1',
+            data: data[1]["ratio"],
+            yAxis: 1,
+            opacity: 0,
+            showInLegend: false
+        },
+        {
+            name: 'Ratio 2',
+            data: data[2]["ratio"],
+            yAxis: 1,
+            opacity: 0,
+            showInLegend: false
+        },
+        {
+            name: 'Ratio 3',
+            data: data[3]["ratio"],
+            yAxis: 1,
+            opacity: 0,
+            showInLegend: false
+        }]
+    });
+    document.getElementById("cleanUp").style.visibility = "visible";
+  }
+
+  
+ 
+</script>
+</html>
